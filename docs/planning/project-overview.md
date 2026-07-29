@@ -1,0 +1,3 @@
+Tassawaq is a modern, scalable, RESTful E-Commerce platform that enables customers to browse products, manage shopping carts, place orders, make secure payments, and track purchases. The platform also provides a comprehensive admin dashboard for managing products, categories, inventory, users, coupons, and orders.
+
+The backend is designed following clean architecture principles, emphasizing scalability, maintainability, security, and production-ready best practices using Node.js, Express.js, MongoDB, and TypeScript.
