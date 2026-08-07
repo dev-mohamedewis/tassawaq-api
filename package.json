@@ -1,20 +1,46 @@
 {
-  "name": "backend",
+  "name": "tassawaq-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "A modern, scalable, and production-ready E-Commerce REST API built with **Node.js**, **Express.js**, and **MongoDB** following software engineering best practices and clean architecture principles.",
   "license": "ISC",
   "author": "mohamed ewis",
-  "type": "commonjs",
-  "main": "index.js",
+  "type": "module",
+  "main": "src/server.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cloudinary": "^2.10.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "nodemon": "^3.1.14"
+    "express-rate-limit": "^8.6.2",
+    "express-validator": "^7.3.2",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.9.1",
+    "morgan": "^1.11.0",
+    "multer": "^2.2.0",
+    "nodemailer": "^9.0.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dev-mohamedewis/tassawaq-api.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/dev-mohamedewis/tassawaq-api/issues"
+  },
+  "homepage": "https://github.com/dev-mohamedewis/tassawaq-api#readme",
+  "devDependencies": {
+    "eslint": "^10.8.0",
+    "nodemon": "^3.1.14",
+    "prettier": "^3.9.6"
   }
 }
