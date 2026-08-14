@@ -7,6 +7,10 @@ import cookieParser from "cookie-parser";
 import notFound from "./middlewares/notfound.js";
 import errorHandler from "./middlewares/error.js";
 
+import authRoutes from "./modules/auth/auth.routes.js";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./config/swagger.js";
+
 const app = express();
 
 app.use(helmet());
@@ -16,6 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // Routes will be added here
 
 app.get("/", (req, res) => {
@@ -25,7 +30,10 @@ app.get("/", (req, res) => {
   });
 });
 
+app.use("/api/v1/auth", authRoutes);
+
 app.use(notFound);
 app.use(errorHandler);
+
 
 export default app;
