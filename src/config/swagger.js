@@ -38,6 +38,34 @@ const swaggerDocument = {
       },
     },
   },
+
+  "/api/v1/auth/verify-email": {
+  post: {
+    tags: ["Authentication"],
+    summary: "Verify user email",
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/VerifyEmailRequest",
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "Email verified successfully",
+      },
+      400: {
+        description: "Invalid or expired verification code",
+      },
+      404: {
+        description: "User not found",
+      },
+    },
+  },
+},
   },
 
   components: {
@@ -76,6 +104,23 @@ const swaggerDocument = {
         },
       },
     },
+
+    VerifyEmailRequest: {
+  type: "object",
+  required: ["email", "verificationCode"],
+  properties: {
+    email: {
+      type: "string",
+      format: "email",
+      example: "mohamed.tst@example.com",
+    },
+    verificationCode: {
+      type: "string",
+      example: "393487",
+    },
+  },
+},
+
   },
 },
 };

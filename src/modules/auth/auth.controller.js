@@ -1,5 +1,5 @@
-import { register } from "./auth.service.js";
-import { registerSchema } from "./auth.validation.js";
+import { register, verifyEmail } from "./auth.service.js";
+import { registerSchema, verifyEmailSchema } from "./auth.validation.js";
 
 const registerUser = async (req, res, next) => {
   try {
@@ -34,4 +34,28 @@ const registerUser = async (req, res, next) => {
   }
 };
 
-export { registerUser };
+const verifyUserEmail = async (req, res, next) => {
+  try {
+    const { error, value } = verifyEmailSchema.validate(req.body);
+
+    if (error) {
+      const validationError = new Error(error.details[0].message);
+      validationError.statusCode = 400;
+      throw validationError;
+    }
+
+    await verifyEmail(
+      value.email,
+      value.verificationCode
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Email verified successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { registerUser, verifyUserEmail };

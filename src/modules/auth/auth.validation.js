@@ -12,4 +12,12 @@ const registerSchema = Joi.object({
   phone: Joi.string().trim().min(10).max(20).required(),
 });
 
-export { registerSchema };
+const verifyEmailSchema = Joi.object({
+  email: Joi.string().trim().lowercase().email().required(),
+
+  verificationCode: Joi.string()
+    .pattern(/^\d{6}$/)
+    .required(),
+});
+
+export { registerSchema, verifyEmailSchema };
