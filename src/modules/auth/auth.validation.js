@@ -20,4 +20,10 @@ const verifyEmailSchema = Joi.object({
     .required(),
 });
 
-export { registerSchema, verifyEmailSchema };
+const loginSchema = Joi.object({
+  email: Joi.string().trim().lowercase().email().required(),
+
+  password: Joi.string().required(),
+});
+
+export { registerSchema, verifyEmailSchema, loginSchema };

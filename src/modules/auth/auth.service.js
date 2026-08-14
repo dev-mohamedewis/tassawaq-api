@@ -2,10 +2,14 @@ import User from "../users/user.model.js";
 import { createUser } from "../users/user.service.js";
 import { sendVerificationEmail } from "../../services/email/email.service.js";
 import crypto from "crypto";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const generateVerificationCode = () => {
   return crypto.randomInt(100000, 1000000).toString();
 };
+
+// TODO: Add email verification
 const register = async (userData) => {
   const existingUser = await User.findOne({
     email: userData.email,
@@ -83,4 +87,51 @@ const verifyEmail = async (email, verificationCode) => {
   return user;
 };
 
-export { register, verifyEmail };
+// TODO: login
+const login = async (email, password) => {
+  const user = await User.findOne({
+    email,
+    isDeleted: false,
+  }).select("+password");
+
+  if (!user) {
+    const error = new Error("Invalid email or password");
+    error.statusCode = 401;
+    throw error;
+  }
+
+  if (!user.isVerified) {
+    const error = new Error("Please verify your email before logging in");
+    error.statusCode = 403;
+    throw error;
+  }
+
+  const isPasswordValid = await bcrypt.compare(
+    password,
+    user.password
+  );
+
+  if (!isPasswordValid) {
+    const error = new Error("Invalid email or password");
+    error.statusCode = 401;
+    throw error;
+  }
+
+  user.lastLogin = new Date();
+  await user.save();
+
+  const token = jwt.sign(
+    {
+      userId: user._id.toString(),
+      role: user.role,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    }
+  );
+
+  return { user, token };
+};
+
+export { register, verifyEmail, login };

@@ -11,6 +11,7 @@ const swaggerDocument = {
     },
   ],
   paths: {
+    // register operation
     "/api/v1/auth/register": {
     post: {
       tags: ["Authentication"],
@@ -38,7 +39,7 @@ const swaggerDocument = {
       },
     },
   },
-
+ // verify email
   "/api/v1/auth/verify-email": {
   post: {
     tags: ["Authentication"],
@@ -66,10 +67,43 @@ const swaggerDocument = {
     },
   },
 },
+// login operation
+"/api/v1/auth/login": {
+  post: {
+    tags: ["Authentication"],
+    summary: "Login user",
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/LoginRequest",
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "Login successful",
+      },
+      400: {
+        description: "Validation error",
+      },
+      401: {
+        description: "Invalid email or password",
+      },
+      403: {
+        description: "Email is not verified",
+      },
+    },
+  },
+},
+
   },
 
   components: {
   schemas: {
+    // request schemas
     RegisterRequest: {
       type: "object",
       required: [
@@ -104,7 +138,7 @@ const swaggerDocument = {
         },
       },
     },
-
+// verify email
     VerifyEmailRequest: {
   type: "object",
   required: ["email", "verificationCode"],
@@ -117,6 +151,23 @@ const swaggerDocument = {
     verificationCode: {
       type: "string",
       example: "393487",
+    },
+  },
+},
+// login request 
+LoginRequest: {
+  type: "object",
+  required: ["email", "password"],
+  properties: {
+    email: {
+      type: "string",
+      format: "email",
+      example: "mohamed.tst@example.com",
+    },
+    password: {
+      type: "string",
+      format: "password",
+      example: "12345678",
     },
   },
 },
