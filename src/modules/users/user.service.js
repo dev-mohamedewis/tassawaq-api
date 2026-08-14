@@ -14,4 +14,43 @@ const createUser = async (userData) => {
   return user;
 };
 
-export { createUser };
+// uppdate user profile
+const updateProfile = async (userId, updateData) => {
+  const allowedFields = [
+    "firstName",
+    "lastName",
+    "phone",
+    "profileImage",
+  ];
+
+  const updates = {};
+
+  for (const field of allowedFields) {
+    if (updateData[field] !== undefined) {
+      updates[field] = updateData[field];
+    }
+  }
+
+  const user = await User.findOneAndUpdate(
+    {
+      _id: userId,
+      isDeleted: false,
+    },
+    {
+      $set: updates,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  if (!user) {
+    const error = new Error("User not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return user;
+};
+export { createUser, updateProfile };

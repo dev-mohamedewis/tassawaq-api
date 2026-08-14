@@ -99,10 +99,96 @@ const swaggerDocument = {
   },
 },
 
+// get current user
+"/api/v1/users/me": {
+  get: {
+    tags: ["Users"],
+    summary: "Get current authenticated user",
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
+    responses: {
+      200: {
+        description: "Current user returned successfully",
+      },
+      401: {
+        description: "Authentication required or invalid token",
+      },
+    },
+  },
+  patch: {
+    tags: ["Users"],
+    summary: "Update current user profile",
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/UpdateProfileRequest",
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "Profile updated successfully",
+      },
+      400: {
+        description: "Validation error",
+      },
+      401: {
+        description: "Authentication required",
+      },
+      404: {
+        description: "User not found",
+      },
+    },
+  },
+},
+
+
   },
 
   components: {
+     // security schemas
+ securitySchemes: {
+  bearerAuth: {
+    type: "http",
+    scheme: "bearer",
+    bearerFormat: "JWT",
+  },
+},
+
   schemas: {
+    UpdateProfileRequest: {
+  type: "object",
+  properties: {
+    firstName: {
+      type: "string",
+      example: "Mohamed",
+    },
+    lastName: {
+      type: "string",
+      example: "Ewis",
+    },
+    phone: {
+      type: "string",
+      example: "01111111111",
+    },
+    profileImage: {
+      type: "string",
+      format: "uri",
+      example: "https://example.com/profile.jpg",
+    },
+  },
+},
     // request schemas
     RegisterRequest: {
       type: "object",

@@ -11,6 +11,8 @@ import authRoutes from "./modules/auth/auth.routes.js";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./config/swagger.js";
 
+import userRoutes from "./modules/users/user.routes.js";
+
 const app = express();
 
 app.use(helmet());
@@ -31,6 +33,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/users", userRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
