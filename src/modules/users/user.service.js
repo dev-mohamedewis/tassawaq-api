@@ -53,4 +53,38 @@ const updateProfile = async (userId, updateData) => {
 
   return user;
 };
-export { createUser, updateProfile };
+
+const changePassword = async (userId, currentPassword, newPassword) => {
+  const user = await User.findOne({
+    _id: userId,
+    isDeleted: false,
+  }).select("+password");
+
+  if (!user) {
+    const error = new Error("User not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const isCurrentPasswordValid = await bcrypt.compare(
+    currentPassword,
+    user.password
+  );
+
+  if (!isCurrentPasswordValid) {
+    const error = new Error("Current password is incorrect");
+    error.statusCode = 401;
+    throw error;
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+  user.password = hashedPassword;
+  user.lastPasswordChanged = new Date();
+
+  await user.save();
+
+  return user;
+};
+
+export { createUser, updateProfile, changePassword };

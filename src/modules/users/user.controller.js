@@ -1,5 +1,5 @@
-import { updateProfileSchema } from "./user.validation.js";
-import { updateProfile } from "./user.service.js";
+import { updateProfileSchema, changePasswordSchema } from "./user.validation.js";
+import { updateProfile, changePassword } from "./user.service.js";
 
 
 const getCurrentUser = async (req, res) => {
@@ -53,4 +53,29 @@ const updateCurrentUser = async (req, res, next) => {
   }
 };
 
-export { getCurrentUser, updateCurrentUser };
+const changeCurrentUserPassword = async (req, res, next) => {
+  try {
+    const { error, value } = changePasswordSchema.validate(req.body);
+
+    if (error) {
+      const validationError = new Error(error.details[0].message);
+      validationError.statusCode = 400;
+      throw validationError;
+    }
+
+    await changePassword(
+      req.user._id,
+      value.currentPassword,
+      value.newPassword
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Password changed successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { getCurrentUser, updateCurrentUser, changeCurrentUserPassword };

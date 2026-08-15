@@ -99,7 +99,7 @@ const swaggerDocument = {
   },
 },
 
-// get current user
+// Users
 "/api/v1/users/me": {
   get: {
     tags: ["Users"],
@@ -118,6 +118,7 @@ const swaggerDocument = {
       },
     },
   },
+
   patch: {
     tags: ["Users"],
     summary: "Update current user profile",
@@ -145,6 +146,42 @@ const swaggerDocument = {
       },
       401: {
         description: "Authentication required",
+      },
+      404: {
+        description: "User not found",
+      },
+    },
+  },
+},
+
+"/api/v1/users/me/password": {
+  patch: {
+    tags: ["Users"],
+    summary: "Change current user password",
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/ChangePasswordRequest",
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "Password changed successfully",
+      },
+      400: {
+        description: "Validation error",
+      },
+      401: {
+        description: "Current password is incorrect",
       },
       404: {
         description: "User not found",
@@ -186,6 +223,32 @@ const swaggerDocument = {
       type: "string",
       format: "uri",
       example: "https://example.com/profile.jpg",
+    },
+  },
+},
+
+ChangePasswordRequest: {
+  type: "object",
+  required: [
+    "currentPassword",
+    "newPassword",
+    "confirmPassword",
+  ],
+  properties: {
+    currentPassword: {
+      type: "string",
+      format: "password",
+      example: "12345678",
+    },
+    newPassword: {
+      type: "string",
+      format: "password",
+      example: "NewPassword123!",
+    },
+    confirmPassword: {
+      type: "string",
+      format: "password",
+      example: "NewPassword123!",
     },
   },
 },
@@ -257,6 +320,7 @@ LoginRequest: {
     },
   },
 },
+
 
   },
 },

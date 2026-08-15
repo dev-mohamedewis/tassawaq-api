@@ -24,4 +24,24 @@ const updateProfileSchema = Joi.object({
     "object.min": "At least one field is required",
   });
 
-export { updateProfileSchema };
+  const changePasswordSchema = Joi.object({
+  currentPassword: Joi.string().required(),
+
+  newPassword: Joi.string()
+    .min(8)
+    .max(128)
+    .required()
+    .invalid(Joi.ref("currentPassword"))
+    .messages({
+      "any.invalid": "New password must be different from current password",
+    }),
+
+  confirmPassword: Joi.any()
+    .valid(Joi.ref("newPassword"))
+    .required()
+    .messages({
+      "any.only": "Passwords do not match",
+    }),
+});
+
+export { updateProfileSchema, changePasswordSchema };
