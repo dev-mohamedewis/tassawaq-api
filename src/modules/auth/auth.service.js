@@ -1,6 +1,6 @@
 import User from "../users/user.model.js";
 import { createUser } from "../users/user.service.js";
-import { sendVerificationEmail } from "../../services/email/email.service.js";
+import { sendVerificationEmail, sendPasswordResetEmail } from "../../services/email/email.service.js";
 import crypto from "crypto";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -134,4 +134,64 @@ const login = async (email, password) => {
   return { user, token };
 };
 
-export { register, verifyEmail, login };
+const forgotPassword = async (email) => {
+  const user = await User.findOne({
+    email: email.toLowerCase(),
+    isDeleted: false,
+  });
+
+  // لا نكشف هل الإيميل موجود أم لا
+  if (!user) {
+    return;
+  }
+
+  const resetToken = crypto.randomBytes(32).toString("hex");
+
+  user.passwordResetToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  user.passwordResetTokenExpiresAt = new Date(
+    Date.now() + 15 * 60 * 1000
+  );
+
+  await user.save();
+
+  // مؤقتًا هنستخدم الـemail service الموجود
+  await sendPasswordResetEmail({
+    email: user.email,
+    resetToken,
+  });
+};
+
+// TODO: reset password
+const resetPassword = async ({ token, newPassword }) => {
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetTokenExpiresAt: {
+      $gt: new Date(),
+    },
+    isDeleted: false,
+  }).select("+passwordResetToken +passwordResetTokenExpiresAt");
+
+  if (!user) {
+    const error = new Error("Invalid or expired reset token");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  user.password = await bcrypt.hash(newPassword, 12);
+
+  user.passwordResetToken = null;
+  user.passwordResetTokenExpiresAt = null;
+  user.lastPasswordChanged = new Date();
+
+  await user.save();
+};
+export { register, verifyEmail, login, forgotPassword, resetPassword };

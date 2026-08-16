@@ -156,6 +156,18 @@ emailChangeCodeExpiresAt: {
   default: null,
   select: false,
 },
+
+passwordResetToken: {
+  type: String,
+  default: null,
+  select: false,
+},
+
+passwordResetTokenExpiresAt: {
+  type: Date,
+  default: null,
+  select: false,
+},
   },
   {
     timestamps: true,

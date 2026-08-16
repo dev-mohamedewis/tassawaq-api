@@ -265,6 +265,56 @@ const swaggerDocument = {
   },
 },
 
+"/api/v1/auth/forgot-password": {
+  post: {
+    tags: ["Authentication"],
+    summary: "Request password reset",
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/ForgotPasswordRequest",
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "Password reset request processed",
+      },
+      400: {
+        description: "Validation error",
+      },
+    },
+  },
+},
+
+"/api/v1/auth/reset-password": {
+  post: {
+    tags: ["Authentication"],
+    summary: "Reset user password",
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/ResetPasswordRequest",
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "Password reset successfully",
+      },
+      400: {
+        description: "Invalid or expired reset token",
+      },
+    },
+  },
+},
+
   },
 
   components: {
@@ -418,6 +468,43 @@ VerifyEmailChangeRequest: {
     verificationCode: {
       type: "string",
       example: "393487",
+    },
+  },
+},
+
+ForgotPasswordRequest: {
+  type: "object",
+  required: ["email"],
+  properties: {
+    email: {
+      type: "string",
+      format: "email",
+      example: "mohamed.new@example.com",
+    },
+  },
+},
+
+ResetPasswordRequest: {
+  type: "object",
+  required: [
+    "token",
+    "newPassword",
+    "confirmPassword",
+  ],
+  properties: {
+    token: {
+      type: "string",
+      example: "TOKEN_FROM_EMAIL",
+    },
+    newPassword: {
+      type: "string",
+      format: "password",
+      example: "NewPassword123!",
+    },
+    confirmPassword: {
+      type: "string",
+      format: "password",
+      example: "NewPassword123!",
     },
   },
 },
