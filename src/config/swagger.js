@@ -190,6 +190,80 @@ const swaggerDocument = {
   },
 },
 
+  "/api/v1/users/me/email": {
+  patch: {
+    tags: ["Users"],
+    summary: "Request email change",
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/RequestEmailChange",
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "Email change verification code sent",
+      },
+      400: {
+        description: "Validation error",
+      },
+      401: {
+        description: "Current password is incorrect",
+      },
+      409: {
+        description: "Email is already registered",
+      },
+    },
+  },
+},
+
+"/api/v1/users/me/email/verify": {
+  post: {
+    tags: ["Users"],
+    summary: "Verify new email address",
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/VerifyEmailChangeRequest",
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "Email changed successfully",
+      },
+      400: {
+        description: "Invalid or expired verification code",
+      },
+      401: {
+        description: "Authentication required",
+      },
+      404: {
+        description: "User not found",
+      },
+      409: {
+        description: "Email is already registered",
+      },
+    },
+  },
+},
 
   },
 
@@ -317,6 +391,33 @@ LoginRequest: {
       type: "string",
       format: "password",
       example: "12345678",
+    },
+  },
+},
+RequestEmailChange: {
+  type: "object",
+  required: ["currentPassword", "newEmail"],
+  properties: {
+    currentPassword: {
+      type: "string",
+      format: "password",
+      example: "NewPassword123!",
+    },
+    newEmail: {
+      type: "string",
+      format: "email",
+      example: "mohamed.new@example.com",
+    },
+  },
+},
+
+VerifyEmailChangeRequest: {
+  type: "object",
+  required: ["verificationCode"],
+  properties: {
+    verificationCode: {
+      type: "string",
+      example: "393487",
     },
   },
 },

@@ -1,7 +1,7 @@
-import { updateProfileSchema, changePasswordSchema } from "./user.validation.js";
-import { updateProfile, changePassword } from "./user.service.js";
+import { updateProfileSchema, changePasswordSchema, requestEmailChangeSchema, verifyEmailChangeSchema } from "./user.validation.js";
+import { updateProfile, changePassword, requestEmailChange, verifyEmailChange } from "./user.service.js";
 
-
+// Get current user's profile
 const getCurrentUser = async (req, res) => {
   res.status(200).json({
     success: true,
@@ -20,6 +20,7 @@ const getCurrentUser = async (req, res) => {
   });
 };
 
+// Update current user's profile
 const updateCurrentUser = async (req, res, next) => {
   try {
     const { error, value } = updateProfileSchema.validate(req.body);
@@ -53,6 +54,7 @@ const updateCurrentUser = async (req, res, next) => {
   }
 };
 
+// Change current user's password
 const changeCurrentUserPassword = async (req, res, next) => {
   try {
     const { error, value } = changePasswordSchema.validate(req.body);
@@ -78,4 +80,57 @@ const changeCurrentUserPassword = async (req, res, next) => {
   }
 };
 
-export { getCurrentUser, updateCurrentUser, changeCurrentUserPassword };
+// Request email change
+const requestEmailChangeController = async (req, res, next) => {
+  try {
+    const { error, value } = requestEmailChangeSchema.validate(req.body);
+
+    if (error) {
+      const validationError = new Error(error.details[0].message);
+      validationError.statusCode = 400;
+      throw validationError;
+    }
+
+    const result = await requestEmailChange(
+      req.user._id,
+      value.currentPassword,
+      value.newEmail
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Email change verification code sent",
+      data: {
+        pendingEmail: result.pendingEmail,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Verify email change
+const verifyEmailChangeController = async (req, res, next) => {
+  try {
+    const { error, value } = verifyEmailChangeSchema.validate(req.body);
+
+    if (error) {
+      const validationError = new Error(error.details[0].message);
+      validationError.statusCode = 400;
+      throw validationError;
+    }
+
+    await verifyEmailChange(
+      req.user._id,
+      value.verificationCode
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Email changed successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+export { getCurrentUser, updateCurrentUser, changeCurrentUserPassword, requestEmailChangeController, verifyEmailChangeController };

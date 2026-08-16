@@ -1,5 +1,6 @@
 import Joi from "joi";
 
+// Validation schema for updating user profile
 const updateProfileSchema = Joi.object({
   firstName: Joi.string()
     .trim()
@@ -24,6 +25,7 @@ const updateProfileSchema = Joi.object({
     "object.min": "At least one field is required",
   });
 
+  // Validation schema for changing user password
   const changePasswordSchema = Joi.object({
   currentPassword: Joi.string().required(),
 
@@ -44,4 +46,21 @@ const updateProfileSchema = Joi.object({
     }),
 });
 
-export { updateProfileSchema, changePasswordSchema };
+// Validation schema for requesting email change
+const requestEmailChangeSchema = Joi.object({
+  currentPassword: Joi.string().required(),
+
+  newEmail: Joi.string()
+    .trim()
+    .lowercase()
+    .email()
+    .required(),
+});
+
+// Validation schema for verifying email change
+const verifyEmailChangeSchema = Joi.object({
+  verificationCode: Joi.string()
+    .length(6)
+    .required(),
+});
+export { updateProfileSchema, changePasswordSchema, requestEmailChangeSchema, verifyEmailChangeSchema };

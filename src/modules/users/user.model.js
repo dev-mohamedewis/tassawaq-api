@@ -136,10 +136,31 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+
+    pendingEmail: {
+  type: String,
+  default: null,
+  lowercase: true,
+  trim: true,
+  select: false,
+},
+
+emailChangeCode: {
+  type: String,
+  default: null,
+  select: false,
+},
+
+emailChangeCodeExpiresAt: {
+  type: Date,
+  default: null,
+  select: false,
+},
   },
   {
     timestamps: true,
   }
+  
 );
 
 const User = mongoose.model("User", userSchema);
