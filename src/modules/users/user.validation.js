@@ -63,4 +63,79 @@ const verifyEmailChangeSchema = Joi.object({
     .length(6)
     .required(),
 });
-export { updateProfileSchema, changePasswordSchema, requestEmailChangeSchema, verifyEmailChangeSchema };
+
+// Validation schema for adding a new address
+const addAddressSchema = Joi.object({
+  label: Joi.string()
+    .trim()
+    .max(30)
+    .allow("", null),
+
+  street: Joi.string()
+    .trim()
+    .min(2)
+    .max(150)
+    .required(),
+
+  city: Joi.string()
+    .trim()
+    .min(2)
+    .max(100)
+    .required(),
+
+  state: Joi.string()
+    .trim()
+    .max(100)
+    .allow("", null),
+
+  postalCode: Joi.string()
+    .trim()
+    .max(20)
+    .allow("", null),
+
+  country: Joi.string()
+    .trim()
+    .min(2)
+    .max(100)
+    .required(),
+
+  isDefault: Joi.boolean()
+    .default(false),
+});
+
+
+// Validation schema for updating an address
+const updateAddressSchema = Joi.object({
+  label: Joi.string()
+    .trim()
+    .max(30)
+    .allow("", null),
+
+  street: Joi.string()
+    .trim()
+    .min(2)
+    .max(150),
+
+  city: Joi.string()
+    .trim()
+    .min(2)
+    .max(100),
+
+  state: Joi.string()
+    .trim()
+    .max(100)
+    .allow("", null),
+
+  postalCode: Joi.string()
+    .trim()
+    .max(20)
+    .allow("", null),
+
+  country: Joi.string()
+    .trim()
+    .min(2)
+    .max(100),
+
+  isDefault: Joi.boolean(),
+}).min(1);
+export { updateProfileSchema, changePasswordSchema, requestEmailChangeSchema, verifyEmailChangeSchema, addAddressSchema, updateAddressSchema };

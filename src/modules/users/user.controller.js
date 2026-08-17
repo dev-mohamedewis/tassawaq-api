@@ -1,5 +1,5 @@
-import { updateProfileSchema, changePasswordSchema, requestEmailChangeSchema, verifyEmailChangeSchema } from "./user.validation.js";
-import { updateProfile, changePassword, requestEmailChange, verifyEmailChange } from "./user.service.js";
+import { updateProfileSchema, changePasswordSchema, requestEmailChangeSchema, verifyEmailChangeSchema, addAddressSchema, updateAddressSchema } from "./user.validation.js";
+import { updateProfile, changePassword, requestEmailChange, verifyEmailChange, addAddress, getAddresses, updateAddress, deleteAddress, setDefaultAddress } from "./user.service.js";
 
 // Get current user's profile
 const getCurrentUser = async (req, res) => {
@@ -133,4 +133,100 @@ const verifyEmailChangeController = async (req, res, next) => {
     next(error);
   }
 };
-export { getCurrentUser, updateCurrentUser, changeCurrentUserPassword, requestEmailChangeController, verifyEmailChangeController };
+
+
+// Address management controllers
+const addAddressController = async (req, res, next) => {
+  try {
+    const { error, value } = addAddressSchema.validate(req.body);
+
+    if (error) {
+      const validationError = new Error(error.details[0].message);
+      validationError.statusCode = 400;
+      throw validationError;
+    }
+
+    const address = await addAddress(req.user._id, value);
+
+    res.status(201).json({
+      success: true,
+      message: "Address added successfully",
+      data: address,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getAddressesController = async (req, res, next) => {
+  try {
+    const addresses = await getAddresses(req.user._id);
+
+    res.status(200).json({
+      success: true,
+      data: addresses,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateAddressController = async (req, res, next) => {
+  try {
+    const { error, value } = updateAddressSchema.validate(req.body);
+
+    if (error) {
+      const validationError = new Error(error.details[0].message);
+      validationError.statusCode = 400;
+      throw validationError;
+    }
+
+    const address = await updateAddress(
+      req.user._id,
+      req.params.addressId,
+      value
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Address updated successfully",
+      data: address,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteAddressController = async (req, res, next) => {
+  try {
+    await deleteAddress(
+      req.user._id,
+      req.params.addressId
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Address deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const setDefaultAddressController = async (req, res, next) => {
+  try {
+    const address = await setDefaultAddress(
+      req.user._id,
+      req.params.addressId
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Default address updated successfully",
+      data: address,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+export { getCurrentUser, updateCurrentUser, changeCurrentUserPassword, requestEmailChangeController, verifyEmailChangeController, addAddressController, getAddressesController, updateAddressController, deleteAddressController, setDefaultAddressController };

@@ -204,4 +204,151 @@ const verifyEmailChange = async (userId, verificationCode) => {
 
   return user;
 };
-export { createUser, updateProfile, changePassword, requestEmailChange, verifyEmailChange };
+
+// Add a new address
+const addAddress = async (userId, addressData) => {
+  const user = await User.findOne({
+    _id: userId,
+    isDeleted: false,
+  });
+
+  if (!user) {
+    const error = new Error("User not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (addressData.isDefault) {
+    user.addresses.forEach((address) => {
+      address.isDefault = false;
+    });
+  }
+
+  // أول عنوان للمستخدم يصبح Default تلقائيًا
+  if (user.addresses.length === 0) {
+    addressData.isDefault = true;
+  }
+
+  user.addresses.push(addressData);
+
+  await user.save();
+
+  return user.addresses[user.addresses.length - 1];
+};
+
+// Get all addresses for a user
+const getAddresses = async (userId) => {
+  const user = await User.findOne({
+    _id: userId,
+    isDeleted: false,
+  }).select("addresses");
+
+  if (!user) {
+    const error = new Error("User not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return user.addresses;
+};
+
+// Update an address
+const updateAddress = async (userId, addressId, addressData) => {
+  const user = await User.findOne({
+    _id: userId,
+    isDeleted: false,
+  });
+
+  if (!user) {
+    const error = new Error("User not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const address = user.addresses.id(addressId);
+
+  if (!address) {
+    const error = new Error("Address not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (addressData.isDefault === true) {
+    user.addresses.forEach((item) => {
+      item.isDefault = false;
+    });
+  }
+
+  Object.assign(address, addressData);
+
+  await user.save();
+
+  return address;
+};
+
+
+// Delete an address
+const deleteAddress = async (userId, addressId) => {
+  const user = await User.findOne({
+    _id: userId,
+    isDeleted: false,
+  });
+
+  if (!user) {
+    const error = new Error("User not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const address = user.addresses.id(addressId);
+
+  if (!address) {
+    const error = new Error("Address not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const wasDefault = address.isDefault;
+
+  address.deleteOne();
+
+  // لو حذفنا الـdefault، نخلي أول عنوان متبقي Default
+  if (wasDefault && user.addresses.length > 0) {
+    user.addresses[0].isDefault = true;
+  }
+
+  await user.save();
+
+  return true;
+};
+
+// Set an address as default
+const setDefaultAddress = async (userId, addressId) => {
+  const user = await User.findOne({
+    _id: userId,
+    isDeleted: false,
+  });
+
+  if (!user) {
+    const error = new Error("User not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const address = user.addresses.id(addressId);
+
+  if (!address) {
+    const error = new Error("Address not found");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  user.addresses.forEach((item) => {
+    item.isDefault = item._id.equals(address._id);
+  });
+
+  await user.save();
+
+  return address;
+};
+export { createUser, updateProfile, changePassword, requestEmailChange, verifyEmailChange, addAddress, getAddresses, updateAddress, deleteAddress, setDefaultAddress };
