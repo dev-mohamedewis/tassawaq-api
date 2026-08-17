@@ -11,6 +11,7 @@ import authRoutes from "./modules/auth/auth.routes.js";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./config/swagger.js";
 
+import categoryRoutes from "./modules/categories/category.routes.js";
 import userRoutes from "./modules/users/user.routes.js";
 
 const app = express();
@@ -34,6 +35,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/categories", categoryRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

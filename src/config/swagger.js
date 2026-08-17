@@ -482,6 +482,160 @@ const swaggerDocument = {
   },
 },
 
+// Categories
+"/api/v1/categories": {
+  get: {
+    tags: ["Categories"],
+    summary: "Get all active categories",
+    responses: {
+      200: {
+        description: "Categories retrieved successfully",
+      },
+    },
+  },
+
+post: {
+  tags: ["Categories"],
+  summary: "Create a new category",
+
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          $ref: "#/components/schemas/CreateCategoryRequest",
+        },
+      },
+    },
+  },
+
+  responses: {
+    201: {
+      description: "Category created successfully",
+    },
+    400: {
+      description: "Validation error",
+    },
+    401: {
+      description: "Authentication required",
+    },
+    403: {
+      description: "Admin access required",
+    },
+    409: {
+      description: "Category name or slug already exists",
+    },
+  },
+},
+},
+
+"/api/v1/categories/{categoryId}": {
+  get: {
+    tags: ["Categories"],
+    summary: "Get category by ID",
+    parameters: [
+      {
+        name: "categoryId",
+        in: "path",
+        required: true,
+        schema: {
+          type: "string",
+        },
+      },
+    ],
+    responses: {
+      200: {
+        description: "Category retrieved successfully",
+      },
+      404: {
+        description: "Category not found",
+      },
+    },
+  },
+
+patch: {
+  tags: ["Categories"],
+  summary: "Update category",
+
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+
+  parameters: [
+      {
+        name: "categoryId",
+        in: "path",
+        required: true,
+        schema: {
+          type: "string",
+        },
+      },
+    ],
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/UpdateCategoryRequest",
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "Category updated successfully",
+      },
+      400: {
+        description: "Validation error",
+      },
+      404: {
+        description: "Category not found",
+      },
+      409: {
+        description: "Category name or slug already exists",
+      },
+    },
+  },
+
+  delete: {
+  tags: ["Categories"],
+  summary: "Delete category",
+
+  security: [
+    {
+      bearerAuth: [],
+    },
+  ],
+
+  parameters: [
+      {
+        name: "categoryId",
+        in: "path",
+        required: true,
+        schema: {
+          type: "string",
+        },
+      },
+    ],
+    responses: {
+      200: {
+        description: "Category deleted successfully",
+      },
+      404: {
+        description: "Category not found",
+      },
+    },
+  },
+},
+
 
   },
 
@@ -743,6 +897,61 @@ UpdateAddressRequest: {
     isDefault: {
       type: "boolean",
       example: false,
+    },
+  },
+},
+
+CreateCategoryRequest: {
+  type: "object",
+  required: ["name", "slug"],
+  properties: {
+    name: {
+      type: "string",
+      example: "Electronics",
+    },
+    slug: {
+      type: "string",
+      example: "electronics",
+    },
+    description: {
+      type: "string",
+      example: "Electronic devices and accessories",
+    },
+    image: {
+      type: "string",
+      format: "uri",
+      example: "https://example.com/electronics.jpg",
+    },
+    isActive: {
+      type: "boolean",
+      example: true,
+    },
+  },
+},
+
+UpdateCategoryRequest: {
+  type: "object",
+  properties: {
+    name: {
+      type: "string",
+      example: "Electronics",
+    },
+    slug: {
+      type: "string",
+      example: "electronics",
+    },
+    description: {
+      type: "string",
+      example: "Electronic devices and accessories",
+    },
+    image: {
+      type: "string",
+      format: "uri",
+      example: "https://example.com/electronics.jpg",
+    },
+    isActive: {
+      type: "boolean",
+      example: true,
     },
   },
 },
