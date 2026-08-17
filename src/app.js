@@ -7,12 +7,15 @@ import cookieParser from "cookie-parser";
 import notFound from "./middlewares/notfound.js";
 import errorHandler from "./middlewares/error.js";
 
-import authRoutes from "./modules/auth/auth.routes.js";
 import swaggerUi from "swagger-ui-express";
-import swaggerDocument from "./config/swagger.js";
+import swaggerDocument from "./config/swagger/index.js";
 
+
+import authRoutes from "./modules/auth/auth.routes.js";
 import categoryRoutes from "./modules/categories/category.routes.js";
 import userRoutes from "./modules/users/user.routes.js";
+import brandRoutes from "./modules/brands/brand.routes.js";
+import productRoutes from "./modules/products/product.routes.js";
 
 const app = express();
 
@@ -36,6 +39,8 @@ app.get("/", (req, res) => {
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/categories", categoryRoutes);
+app.use("/api/v1/brands", brandRoutes);
+app.use("/api/v1/products", productRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
