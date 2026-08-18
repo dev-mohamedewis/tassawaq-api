@@ -15,6 +15,8 @@ import productSchemas from "./schemas/products.schemas.js";
 import reviewSchemas from "./schemas/reviews.schemas.js";
 import cartSchemas from "./schemas/cart.schemas.js";
 import wishlistPaths from "./paths/wishlist.paths.js";
+import orderPaths from "./paths/order.paths.js";
+import orderSchemas from "./schemas/order.schemas.js";
 
 const swaggerDocument = {
   openapi: "3.0.0",
@@ -41,6 +43,7 @@ const swaggerDocument = {
     ...reviewPaths,
     ...cartPaths,
     ...wishlistPaths,
+    ...orderPaths,
   },
 
   components: {
@@ -61,6 +64,7 @@ const swaggerDocument = {
       ...reviewSchemas,
       ...cartSchemas,
       ...wishlistSchemas,
+      ...orderSchemas,
     },
   },
 };

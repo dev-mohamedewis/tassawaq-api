@@ -19,6 +19,7 @@ import productRoutes from "./modules/products/product.routes.js";
 import reviewRoutes from "./modules/reviews/review.routes.js";
 import cartRoutes from "./modules/cart/cart.routes.js";
 import wishlistRoutes from "./modules/wishlist/wishlist.routes.js";
+import orderRoutes from "./modules/orders/order.routes.js";
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
 app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/wishlist", wishlistRoutes);
+app.use("/api/v1/orders", orderRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
