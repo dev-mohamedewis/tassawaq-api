@@ -8,6 +8,7 @@ import reviewSchemas from "./schemas/reviews.schemas.js";
 import cartSchemas from "./schemas/cart.schemas.js";
 import orderSchemas from "./schemas/order.schemas.js";
 import couponSchemas from "./schemas/coupon.schemas.js";
+import paymentSchemas from "./schemas/payment.schemas.js";
 
 import reviewPaths from "./paths/reviews.paths.js";
 import cartPaths from "./paths/cart.paths.js";
@@ -19,6 +20,7 @@ import brandPaths from "./paths/brand.paths.js";
 import wishlistPaths from "./paths/wishlist.paths.js";
 import orderPaths from "./paths/order.paths.js";
 import couponPaths from "./paths/coupon.paths.js";
+import paymentPaths from "./paths/payment.paths.js";
 
 const swaggerDocument = {
   openapi: "3.0.0",
@@ -47,6 +49,7 @@ const swaggerDocument = {
     ...wishlistPaths,
     ...orderPaths,
     ...couponPaths,
+    ...paymentPaths,
   },
 
   components: {
@@ -69,6 +72,7 @@ const swaggerDocument = {
       ...wishlistSchemas,
       ...orderSchemas,
       ...couponSchemas,
+      ...paymentSchemas,
     },
   },
 };

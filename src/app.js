@@ -21,8 +21,20 @@ import cartRoutes from "./modules/cart/cart.routes.js";
 import wishlistRoutes from "./modules/wishlist/wishlist.routes.js";
 import orderRoutes from "./modules/orders/order.routes.js";
 import couponRoutes from "./modules/coupons/coupon.routes.js";
+import paymentRoutes from "./modules/payments/payment.routes.js";
+import {
+  stripeWebhookController,
+} from "./modules/payments/payment.controller.js";
 
 const app = express();
+
+app.use(
+  "/api/v1/payments/webhook",
+  express.raw({
+    type: "application/json",
+  }),
+  stripeWebhookController
+);
 
 app.use(helmet());
 app.use(cors());
@@ -51,6 +63,7 @@ app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/wishlist", wishlistRoutes);
 app.use("/api/v1/orders", orderRoutes);
 app.use("/api/v1/coupons", couponRoutes);
+app.use("/api/v1/payments", paymentRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
