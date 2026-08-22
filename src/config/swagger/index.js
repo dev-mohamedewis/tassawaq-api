@@ -21,6 +21,7 @@ import wishlistPaths from "./paths/wishlist.paths.js";
 import orderPaths from "./paths/order.paths.js";
 import couponPaths from "./paths/coupon.paths.js";
 import paymentPaths from "./paths/payment.paths.js";
+import adminPaths from "./paths/admin.paths.js";
 
 const swaggerDocument = {
   openapi: "3.0.0",
@@ -50,6 +51,7 @@ const swaggerDocument = {
     ...orderPaths,
     ...couponPaths,
     ...paymentPaths,
+    ...adminPaths,
   },
 
   components: {

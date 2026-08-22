@@ -22,9 +22,8 @@ import wishlistRoutes from "./modules/wishlist/wishlist.routes.js";
 import orderRoutes from "./modules/orders/order.routes.js";
 import couponRoutes from "./modules/coupons/coupon.routes.js";
 import paymentRoutes from "./modules/payments/payment.routes.js";
-import {
-  stripeWebhookController,
-} from "./modules/payments/payment.controller.js";
+import { stripeWebhookController,} from "./modules/payments/payment.controller.js";
+import adminRoutes from "./modules/admin/admin.routes.js";
 
 const app = express();
 
@@ -64,6 +63,7 @@ app.use("/api/v1/wishlist", wishlistRoutes);
 app.use("/api/v1/orders", orderRoutes);
 app.use("/api/v1/coupons", couponRoutes);
 app.use("/api/v1/payments", paymentRoutes);
+app.use("/api/v1/admin", adminRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
